@@ -27,13 +27,23 @@ def getInput():
 def scrapeLinkedIn():
     # Initialize Selenium driver to LinkedIn site
     driver.get("https://www.linkedin.com/jobs/search?keywords={}".format(job_query))
+    print("Searching on LinkedIn...")
 
     for _ in range(6):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(5)
 
+    # scroll up
     driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.HOME)
     time.sleep(5)
+
+    # SCRAPE!
+    listings = driver.find_elements_by_class_name('result-card')
+
+    for listing in listings:
+        div = listing.find_element_by_css_selector('div.result-card__contents')
+        title = div.find_element_by_css_selector('h3')
+        print(title.text)
 
     driver.close()
 
@@ -41,7 +51,7 @@ def scrapeLinkedIn():
 
 if __name__ == '__main__':
     print("Find Me A Job -- Command-Line Interface")
-    print("---" * 10)
+    print("---" * 13)
     job_query = getInput()
 
     scrapeLinkedIn()
