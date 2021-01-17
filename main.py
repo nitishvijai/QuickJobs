@@ -10,6 +10,7 @@
 # Still working on the implementation.
 
 from selenium import webdriver
+from selenium import common
 from selenium.webdriver.common.keys import Keys
 import time
 
@@ -44,7 +45,33 @@ def scrapeLinkedIn():
         div = listing.find_element_by_css_selector('div.result-card__contents')
         title = div.find_element_by_css_selector('h3')
         company = div.find_element_by_css_selector('h4').find_element_by_class_name('result-card__subtitle-link')
-        print(title.text, '-', company.text)
+
+        applyNow = div.find_elements_by_class_name('job-result-card__easy-apply-label')
+
+        # skipping Apply Now / Easy Apply jobs for now
+        if len(applyNow) >= 1:
+            continue
+
+        time.sleep(1)
+
+        listing.click()
+
+        time.sleep(1)
+
+        right = driver.find_element_by_class_name('topcard__content-right')
+        
+        time.sleep(1)
+
+        link = 0
+        try:
+            link = right.find_element_by_class_name('apply-button')
+            time.sleep(1)
+            print(title.text, '-', company.text, '-', link.get_attribute("href"))
+        except common.exceptions.StaleElementReferenceException as error:
+            pass
+        
+
+        
 
     driver.close()
 
