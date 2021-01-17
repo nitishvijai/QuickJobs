@@ -43,7 +43,8 @@ def scrapeLinkedIn():
     for listing in listings:
         div = listing.find_element_by_css_selector('div.result-card__contents')
         title = div.find_element_by_css_selector('h3')
-        print(title.text)
+        company = div.find_element_by_css_selector('h4').find_element_by_class_name('result-card__subtitle-link')
+        print(title.text, '-', company.text)
 
     driver.close()
 
