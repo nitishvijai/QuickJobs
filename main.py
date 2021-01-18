@@ -36,12 +36,18 @@ def scrapeLinkedIn():
 
     # scroll up
     driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.HOME)
-    time.sleep(5)
 
     # SCRAPE!
     listings = driver.find_elements_by_class_name('result-card')
 
+    # runs limit is 11-12 before LinkedIn asks us to sign in. We'll play it safe and stop it at 11.
+    # will figure out a way to bypass in the future
+
+    runs = 0
     for listing in listings:
+        if runs >= 11:
+            break
+
         div = listing.find_element_by_css_selector('div.result-card__contents')
         title = div.find_element_by_css_selector('h3')
         company = div.find_element_by_css_selector('h4').find_element_by_class_name('result-card__subtitle-link')
@@ -52,24 +58,20 @@ def scrapeLinkedIn():
         if len(applyNow) >= 1:
             continue
 
-        time.sleep(1)
-
         listing.click()
 
         time.sleep(1)
 
         right = driver.find_element_by_class_name('topcard__content-right')
-        
-        time.sleep(1)
 
         link = 0
         try:
             link = right.find_element_by_class_name('apply-button')
-            time.sleep(1)
             print(title.text, '-', company.text, '-', link.get_attribute("href"))
         except common.exceptions.StaleElementReferenceException as error:
             pass
         
+        runs += 1
 
         
 
