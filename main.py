@@ -87,7 +87,18 @@ def scrapeIndeed():
 
     for posting in postings:
         # iterate thru postings
-        print("posting found")
+        title = posting.find_element_by_class_name("jobtitle").get_attribute("title")
+        company = posting.find_element_by_class_name("company")
+        
+        children = company.find_elements_by_css_selector("*")
+
+        company_text = ""
+        if len(children) > 0:
+            company_text = children[0].text
+        else:
+            company_text = company.text
+            
+        print(title, '-', company_text)
 
 
 if __name__ == '__main__':
