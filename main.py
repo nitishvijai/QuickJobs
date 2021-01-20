@@ -73,10 +73,21 @@ def scrapeLinkedIn():
         
         runs += 1
 
-        
+def scrapeIndeed():
+    driver.get("https://www.indeed.com/jobs?q={}".format(job_query))
+    time.sleep(3)
+    emailPopUpExists = driver.find_elements_by_class_name("popover-x-button-close")
 
-    driver.close()
+    if len(emailPopUpExists) > 0:
+        # discard that popup box
+        driver.find_element_by_class_name("popover-x-button-close").click()
 
+    # list of all postings on Indeed
+    postings = driver.find_elements_by_class_name("jobsearch-SerpJobCard")
+
+    for posting in postings:
+        # iterate thru postings
+        print("posting found")
 
 
 if __name__ == '__main__':
@@ -85,3 +96,6 @@ if __name__ == '__main__':
     job_query = getInput()
 
     scrapeLinkedIn()
+    scrapeIndeed()
+
+    driver.close()
