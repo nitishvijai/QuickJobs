@@ -92,13 +92,24 @@ def scrapeIndeed():
         
         children = company.find_elements_by_css_selector("*")
 
+        easilyApply = posting.find_elements_by_class_name("jobCardShelf")
+
+        # skipping Easy Apply for now
+        if len(easilyApply) >= 1:
+            continue
+
         company_text = ""
         if len(children) > 0:
             company_text = children[0].text
         else:
             company_text = company.text
+
+        posting.click()
+
+        time.sleep(10)
+        apply_button = driver.find_elements_by_class_name("icl-Button")
             
-        print(title, '-', company_text)
+        print(title, '-', company_text, '-', apply_button.get_attribute("href"))
 
 
 if __name__ == '__main__':
